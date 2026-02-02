@@ -5,8 +5,12 @@ use AbdulovSQL;
 CREATE TABLE opilane(
 opilaneID int PRIMARY KEY identity(1,1),
 eesnimi varchar(25),
-perenimi varchar(30) NOT null,
+perenimi varchar(30) NOT null UNIQUE,
 synniaeg date,
 aadress TEXT,
 kas_opib bit);
+--kuvab tabeli, * - kõik väljad
 SELECT * FROM opilane;
+
+--tabeli kustutamine
+DROP TABLE opilane;
