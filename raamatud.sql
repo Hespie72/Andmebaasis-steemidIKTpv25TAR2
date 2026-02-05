@@ -42,3 +42,24 @@ INSERT INTO raamat(raamatNimetus, lk, autorID, zanrID)
 VALUES ('Oskar ja asjad', 200, 2, 3)
 
 Select * from raamat;
+
+CREATE TABLE trykikoda(
+trykikodaID int PRIMARY KEY identity(1,1),
+Nimetus varchar(50) UNIQUE,
+aadress varchar(70)
+);
+CREATE TABLE trykitudRaamat(
+trRaamatID int PRIMARY KEY identity(1,1),
+trykikodaID int
+FOREIGN KEY (trykikodaID) REFERENCES trykikoda(trykikodaID),
+raamatID int
+FOREIGN KEY (raamatID) REFERENCES raamat(raamatID),
+kogus int
+);
+INSERT INTO trykikoda(Nimetus, aadress)
+VALUES ('trukikoda', 'Tallinn')
+INSERT INTO trykitudRaamat(kogus, trykikodaID, raamatID)
+VALUES (25, 100, 1)
+delete from trykitudRaamat where trRaamatID = 1
+Select * from trykikoda;
+Select * from trykitudRaamat;
