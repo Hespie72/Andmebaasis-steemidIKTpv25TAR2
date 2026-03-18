@@ -1,0 +1,106 @@
+create database ViewAbdulov
+use ViewAbdulov
+
+CREATE TABLE uudised(
+uudisID int primary key identity(1,1),
+uudisPealkiri varchar(50),
+kuupaev date,
+kirjeldus TEXT,
+ajakirjanikID int);
+
+CREATE TABLE ajakirjanik(
+ajakirjanikID int primary key identity(1,1),
+nimi varchar(50),
+telefon varchar(13));
+
+ALTER TABLE uudised ADD CONSTRAINT fk_ajakirjanik
+FOREIGN KEY (ajakirjanikID)
+REFERENCES ajakirjanik(ajakirjanikID);
+
+INSERT INTO ajakirjanik(nimi,telefon)
+values ('Lev','5757755874'),('Anton','57357597')
+
+SELECT * FROM ajakirjanik;
+
+
+INSERT into uudised(uudisPealkiri,kuupaev,ajakirjanikID)
+values ('Homme on ises töö päev','2025-03-12',1),
+('Täna on andmebaaside tund','2025-03-12',1),
+('Täna on vihane ilm','2025-03-12',2)
+
+Select * from uudised;
+
+--select päring 2 tabellite põhjal
+SELECT * FROM uudised,ajakirjanik
+WHERE uudised.ajakirjanikID=ajakirjanik.ajakirjanikID;
+
+--alias-nimede kasutamine
+SELECT * FROM uudised u,ajakirjanik a
+WHERE u.ajakirjanikID=a.ajakirjanikID;
+
+--kitsain tulemus
+SELECT u.uudisPealkiri, a.nimi FROM uudised u,ajakirjanik a
+WHERE u.ajakirjanikID=a.ajakirjanikID;
+--salvestame vaade
+create view loodudUudised AS 
+SELECT u.uudisPealkiri, a.nimi FROM uudised u,ajakirjanik a
+WHERE u.ajakirjanikID=a.ajakirjanikID;
+
+--kutsume salvestatud vaade
+SELECT * from loodudUudised;
+
+--kasutame view tingimus ka
+SELECT * from loodudUudised
+WHERE nimi Like 'Lev';
+
+--INNER JOIN - sisemine ühendamine
+SELECT u.uudisPealkiri,a.nimi as autor, kuupaev
+FROM uudised as u INNER JOIN ajakirjanik as a
+ON u.ajakirjanikID=a.ajakirjanikID;
+
+CREATE VIEW kuupaevaUudised As
+SELECT u.uudisPealkiri,a.nimi as autor, kuupaev
+FROM uudised as u INNER JOIN ajakirjanik as a
+ON u.ajakirjanikID=a.ajakirjanikID;
+
+select * from kuupaevaUudised
+--kuvame salvestatud view päring
+SELECT uudisPealkiri, YEAR(kuupaev) as aasta
+FROM kuupaevaUudised;
+
+--3.tabel
+CREATE TABLE ajaleht(
+ajalehtID int primary key identity(1,1),
+ajalehtNimetus varchar(50));
+INSERT ajaleht(ajalehtNimetus)
+values ('Postimees'),('Delfi');
+
+
+ALTER TABLE uudised ADD ajalehtID int;
+ALTER TABLE uudised ADD constraint fk_ajaleht
+FOREIGN KEY (ajalehtID) References ajaleht(ajalehtID);
+
+UPDATE uudised SET ajalehtID=2;
+SELECT * FROM ajaleht;
+select * from uudised;
+
+--select 3 tabelite põhjal
+SELECT u.uudisPealkiri,a.nimi as autor,aj.ajalehtNimetus
+FROM (uudised as u INNER JOIN ajakirjanik as a
+ON u.ajakirjanikID=a.ajakirjanikID)
+INNER JOIN ajaleht as aj
+ON u.ajalehtID=aj.ajalehtID;
+
+drop view AutoriUudisedAjalehes
+--loome vaade
+create view AutoriUudisedAjalehes as
+SELECT u.uudisPealkiri,a.nimi as autor,aj.ajalehtNimetus, kuupaev
+FROM (uudised u INNER JOIN ajakirjanik a
+ON u.ajakirjanikID=a.ajakirjanikID)
+INNER JOIN ajaleht aj
+ON u.ajalehtID=aj.ajalehtID;
+
+select * from AutoriUudisedAjalehes
+Select * from uudised
+UPDATE AutoriUudisedAjalehes SET kuupaev = '2026-03-18';
+--viewUudised
