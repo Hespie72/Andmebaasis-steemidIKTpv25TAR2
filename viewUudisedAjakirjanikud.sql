@@ -104,3 +104,20 @@ select * from AutoriUudisedAjalehes
 Select * from uudised
 UPDATE AutoriUudisedAjalehes SET kuupaev = '2026-03-18';
 --viewUudised
+
+--Ülesanded
+select * from AutoriUudisedAjalehes;
+Select * from uudised;
+UPDATE AutoriUudisedAjalehes SET kuupaev = '2026-03-18';
+
+Create view NäitabKuupäevUudised AS 
+Select * from uudised
+WHERE kuupaev="2026-03-18"
+
+CREATE VIEW nimi3tahte as
+SELECT * FROM ajakirjanik
+WHERE len(nimi)=3;
+
+CREATE VIEW ajalehedTahega AS
+SELECT * FROM ajaleht
+WHERE ajalehtNimetus LIKE 'D%'
